@@ -1,17 +1,17 @@
 # demo
 
-![demo](example/demoa.png)
+![demo](demoa.png)
 
-![demo](example/demob.png)
+![demo](demob.png)
 
-![demo](example/democ.png)
+![demo](democ.png)
 
-![demo](example/demod.png)
+![demo](demod.png)
 
-![demo](example/demoe.png)
+![demo](demoe.png)
 
-![demo](example/demof.png)
+![demo](demof.png)
 
-![demo](example/demof1.png)
+![demo](demof1.png)
 
 end.

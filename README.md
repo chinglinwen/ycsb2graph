@@ -4,9 +4,11 @@
 
 ![demo](example/demo.png)
 
+
+
 ## 文件名要求
 
-对测试结果只有文件名的要求，需符合以下文件名
+对测试结果只有文件名的要求，需符合以下文件名格式，用减号分隔，以.result结尾
 
 	dbname-workloadname-recordscount.result
 

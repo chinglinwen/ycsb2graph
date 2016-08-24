@@ -1,0 +1,62 @@
+graph="$headline
+<div id=\"$id\" class="chart"></div>
+<script>
+\$(document).ready(function() {  
+   var chart = {
+      type: 'spline'      
+   }; 
+   var title = {
+      text: '$title'
+   };
+   var subtitle = {
+      text: '$subtitle'
+   };
+
+   var yAxis = {
+      title: {
+         text: '$ytitle'
+      },
+      labels: {
+         formatter: function () {
+            return this.value;
+         }
+      },
+      lineWidth: 2
+   };
+   var tooltip = {
+      crosshairs: true,
+      shared: true
+   };
+   var plotOptions = {
+      spline: {
+         marker: {
+            radius: 4,
+            lineColor: '#666666',
+            lineWidth: 1
+         }
+      }
+   };
+   var xAxis = {
+      title: {
+         text: '$xtitle'
+      },
+      categories: [$category]
+   };
+   var series= [$allseries
+   ];
+   var json = {};
+   json.chart = chart;
+   json.title = title;
+   json.subtitle = subtitle;
+   json.tooltip = tooltip;
+   json.xAxis = xAxis;
+   json.yAxis = yAxis;  
+   json.series = series;
+   json.plotOptions = plotOptions;
+   \$('#$id').highcharts(json);
+  
+});
+</script>
+"
+allgraph="$allgraph $graph"
+

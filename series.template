@@ -1,0 +1,9 @@
+series="{
+         name: '$name',
+         marker: {
+            symbol: '$symbol'
+         },
+         data: [$data],
+         $color
+      },"
+allseries="$allseries $series"

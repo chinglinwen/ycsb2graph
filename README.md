@@ -12,7 +12,7 @@
 	dbname-workloadname-recordscount.result
 
 如：
-	``CockroachDB-WorkloadA-100.result``
+	CockroachDB-WorkloadA-100.result
 
 查看全部示例，请查看[example](example)链接
 

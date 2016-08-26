@@ -221,6 +221,7 @@ analyze () {
 $opkind
 eof
 
+  color=""
   out="$( echo "$files" | getRunTime )"
   if [ "x$out" != "x" ]; then
     genGraph "$type-OVERALL-RunTime" "$dbs" "$out"

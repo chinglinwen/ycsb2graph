@@ -50,42 +50,22 @@ getAvg () {
   grep Average
 }
 
+noNaN () {
+  getAvg | grep -v NaN
+}
+
 getOps () {
   #unit count
   grep Operations
 }
 
-noNaN () {
-  getAvg | grep -v NaN
+getRunTime () {
+  xargs grep -H 'RunTime'
 }
 
-getRead () {
-  xargs grep -H '\[READ\]' | noNaN
+getThroughput () {
+  xargs grep -H 'Throughput'
 }
-
-getUpdate () {
-  xargs grep -H '\[UPDATE\]' | noNaN
-}
-
-getInsert () {
-  xargs grep -H '\[INSERT\]' | noNaN
-}
-
-getScan () {
-  xargs grep -H '\[SCAN\]' | noNaN 
-}
-
-getFailed () {
-  xargs grep -H 'FAILED\]' | noNaN
-}
-
-getModify () {
-  xargs grep -H '\[READ-MODIFY-WRITE\]'  | noNaN 
-}
-
-#getSeries () {
-#  grep -v 'Op\|Min\|Av\|Max\|Ret'
-#}
 
 
 # uniq and compare, use the max count one
@@ -122,8 +102,14 @@ getData () {
     fi
     
     j="$( echo $l | awk '{ print $3 }' )"
-    # convert to milliseconds
-    j="$( awk "BEGIN {printf \"%.3f\", $j/1000}" )"
+    
+    echo "$l" | grep -e Throughput -e FAILED > /dev/null
+    if [ $? -ne 0 ]; then
+      # convert to milliseconds
+      # for runtime, it is to seconds
+      j="$( awk "BEGIN {printf \"%.3f\", $j/1000}" )"
+    fi
+    
     if [ "x$data" = "x" ]; then
       data="$j"
     else
@@ -181,7 +167,20 @@ eof
   title="$k $desc"
   subtitle="$( getSubtitle "$k" )"
   ytitle="Latency (Milliseconds)"
-  xtitle="Throughput(ops/sec)"
+  xtitle="Throughput"
+  
+  echo "$desc" | grep FAILED >/dev/null
+  if [ $? -eq 0 ]; then
+    ytitle="Operations"
+  fi
+  
+  if [ "$desc" = "OVERALL-RunTime" ]; then
+    ytitle="RunTime (Seconds)"
+  fi
+  
+  if [ "$desc" = "OVERALL-Throughput" ]; then
+    ytitle="Throughput (ops/sec)"
+  fi
   
   . ./graph.template
   headline=""
@@ -195,40 +194,42 @@ analyze () {
  
   dbs="$( echo "$files" | awk '{ print $NF }' FS='/' | \
               awk '{ print $1 }' FS='-' | uniq )"
-  out=""      
+  out=""
   headline="<h2>$type</h2>"
   
-  out="$( echo "$files" | getRead )"
+  opkind="$( echo "$files" | xargs grep '^\[' | grep -v -e TOTAL \
+              -e CLEANUP -e OVERALL | awk '{ print $1 }' FS=',' | \
+              awk '{ print $2 }' FS=':' | \
+              sort -d | uniq )"
+  
+  while read op; do
+    key="$( echo $op | sed 's/\[/\\[/' )"
+    opname="$( echo $op | tr -d '[]' )"
+    out="$( echo "$files" | xargs grep "$key" | noNaN )"
+    
+    color=""
+    echo "$op" | grep FAILED > /dev/null
+    if [ $? -eq 0 ]; then
+      color="color: '#FF9800'"
+      out="$( echo "$files" | xargs grep "$key" | getOps )"
+    fi
+    
+    if [ "x$out" != "x" ]; then
+      genGraph "$type-$opname" "$dbs" "$out"
+    fi
+  done<<eof
+$opkind
+eof
+
+  out="$( echo "$files" | getRunTime )"
   if [ "x$out" != "x" ]; then
-    genGraph "$type-Read" "$dbs" "$out"
+    genGraph "$type-OVERALL-RunTime" "$dbs" "$out"
   fi
 
-  out="$( echo "$files" | getUpdate )"
+  out="$( echo "$files" | getThroughput )"
   if [ "x$out" != "x" ]; then
-    genGraph "$type-Update" "$dbs" "$out"
+    genGraph "$type-OVERALL-Throughput" "$dbs" "$out"
   fi
-  
-  out="$( echo "$files" | getModify )"
-  if [ "x$out" != "x" ]; then
-    genGraph "$type-Read-Modify-Write" "$dbs" "$out"
-  fi
-  
-  out="$( echo "$files" | getInsert )"
-  if [ "x$out" != "x" ]; then
-    genGraph "$type-Insert" "$dbs" "$out"
-  fi
-  
-  out="$( echo "$files" | getScan )"
-  if [ "x$out" != "x" ]; then  
-    genGraph "$type-Scan" "$dbs" "$out"
-  fi
-
-  color="color: '#FF9800'"
-  out="$( echo "$files" | getFailed )"
-  if [ "x$out" != "x" ]; then
-    genGraph "$type-Insert-Failed" "$dbs" "$out"
-  fi
-  color=""
 }
 
 while read type; do

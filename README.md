@@ -24,4 +24,6 @@
 
 查看全部示例，请查看[example](example)链接
 
+示例为通过ycsb_starter提供的测试结果，关于ycsb_starter，请查看[ycsb_starter](http://192.168.100.93:3000/wenzhenglin/ycsb_starter)链接
+
 end.

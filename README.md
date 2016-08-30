@@ -4,7 +4,15 @@
 
 ![demo](example/demo.png)
 
+## 使用方法
 
+	./ycsb2graphV2.sh [resultsDir]...
+	
+如
+
+	./ycsb2graphV2.sh ../ycsb_starter/Results.cockroachDB.20160830_143458 ../ycsb_starter/Results.mysql.20160830_143501
+
+	
 ## 文件名要求
 
 对测试结果只有文件名的要求，需符合以下文件名格式，用减号分隔，以.result结尾

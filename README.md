@@ -1,29 +1,30 @@
 # ycsb2graph
 
-支持将ycsb的测试结果，自动生成可视化图形
+To generate visualize graph from ycsb testing results
 
 ![demo](example/demo.png)
 
-## 使用方法
+## Usage
 
 	./ycsb2graphV2.sh [resultsDir]...
 	
-如
+example:
 
 	./ycsb2graphV2.sh ../ycsb_starter/Results.cockroachDB.20160830_143458 ../ycsb_starter/Results.mysql.20160830_143501
 
 	
-## 文件名要求
+## Filename requires
 
-对测试结果只有文件名的要求，需符合以下文件名格式，用减号分隔，以.result结尾
+It only have filename requirement, it need to follow the giving rule ( use dash to separate, with suffix .result )
 
 	dbname-workloadname-recordscount.result
 
-如：
+Example:
+
 	CockroachDB-WorkloadA-100.result
 
-查看全部示例，请查看[example](example)链接
+For all demo graph, see  [example](example)
 
-示例为通过ycsb_starter提供的测试结果，关于ycsb_starter，请查看[ycsb_starter](http://192.168.100.93:3000/wenzhenglin/ycsb_starter)链接
+The demo's results is provided by ycsb_starter, For more info about ycsb_starter, see[ycsb_starter](https://github.com/chinglinwen/ycsb_starter)
 
 end.

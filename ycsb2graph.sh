@@ -150,7 +150,7 @@ genGraph () {
     if [ "x$db" = "x" ]; then
       continue
     fi
-    contents="$( echo "$output" | grep "$db" )"
+    contents="$( echo "$output" | grep -w "$db" )"
     data="$( getData "$contents" )"
     if [ "x$data" != "x" ]; then
       name="$db"
